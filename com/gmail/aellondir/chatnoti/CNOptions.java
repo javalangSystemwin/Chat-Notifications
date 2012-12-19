@@ -25,8 +25,7 @@ public class CNOptions {
     /**
      *
      */
-    protected static boolean
-            enabled = true,
+    protected static boolean enabled = true,
             watchUN = false,
             /**
              *
@@ -47,10 +46,25 @@ public class CNOptions {
      *                  1 = Names.
      * @code {String} is the word to be used.
      */
-    protected static HashMap<String, Integer> namesAndWords = new HashMap<>();
+    private static HashMap<String, Integer> namesAndWords = new HashMap<>();
     protected static int adminWA = 0, namesAccum = 0;
     private static File optsFile = new File(Minecraft.getMinecraftDir().getAbsolutePath() + System.getProperty("file.seperator") + "CNOpts.txt"),
             namesFile = new File(Minecraft.getMinecraftDir().getAbsolutePath() + System.getProperty("file.seperator") + "CNNames.txt");
+
+    /**
+     * Names and Words for Administrator mode now immediately capitalized and
+     * put in a
+     * HashMap for more ready retrieval.
+     *
+     * @code {Integer} defines how the word should be treated.
+     * 0 = Admin.
+     * 1 = Names.
+     * @code {String} is the word to be used.
+     * @return the namesAndWords
+     */
+    protected static HashMap<String, Integer> getNamesAndWords() {
+        return namesAndWords;
+    }
 
     //private constructor as this class is not to be instantiated.
     private CNOptions() {
@@ -60,7 +74,7 @@ public class CNOptions {
      *
      * @return
      */
-    protected static int getOptions() {
+    protected static int getOptions() throws OptionsFailedException {
         boolean opts = false, names = false;
 
         try {
@@ -100,7 +114,7 @@ public class CNOptions {
         }
     }
 
-    private static boolean readOptions() throws FileNotFoundException, IOException {
+    private static boolean readOptions() throws FileNotFoundException, IOException, OptionsFailedException {
         BufferedReader optsRead = new BufferedReader(new FileReader(optsFile));
 
         if (optsRead == null) {
@@ -110,7 +124,7 @@ public class CNOptions {
         String str = optsRead.readLine();
         boolean reWrite = false;
 
-        if (!str.equals(serialVersionUID)) {
+        if (!str.equals(Long.toString(serialVersionUID))) {
             reWrite = true;
         }
 
@@ -130,25 +144,31 @@ public class CNOptions {
                     break;
                 case "chatLog":
                     chatLog = Boolean.parseBoolean(strArr[1]);
+                    break;
                 case "volume":
-                    volume = Float.parseFloat(strArr[1])/100.0F;
+                    volume = Float.parseFloat(strArr[1]) / 100.0F;
                     break;
                 default:
-                    Minecraft.getMinecraft().thePlayer.addChatMessage("Dafuq?  Why would you modify the options file, making it unreadable?");
-                    return false;
+                    break;
             }
 
             str = optsRead.readLine();
         } while (str != null && str.length() != 0);
 
         if (reWrite) {
-             return writeOptions();
+            boolean write = writeOptions();
+
+            if (write) {
+                return true;
+            } else {
+                throw new OptionsFailedException("Options Failed to read or write correctly.");
+            }
         }
 
         return true;
     }
 
-    private static boolean readNames() throws FileNotFoundException, IOException {
+    private static boolean readNames() throws FileNotFoundException, IOException, OptionsFailedException {
         BufferedReader namesRead = new BufferedReader(new FileReader(namesFile));
 
         if (namesRead == null) {
@@ -158,7 +178,7 @@ public class CNOptions {
         String str = namesRead.readLine();
         boolean reWrite = false;
 
-        if (!str.equals(serialVersionUID)) {
+        if (!str.equals(Long.toString(serialVersionUID))) {
             reWrite = true;
         }
 
@@ -176,9 +196,8 @@ public class CNOptions {
                     namesR = false;
                     adminR = true;
                     break;
+                case "":
                 default:
-                    Minecraft.getMinecraft().thePlayer.addChatMessage("Dafuq? Why did you make the names file unreadable?");
-                    reWrite = true;
                     break;
             }
 
@@ -192,71 +211,82 @@ public class CNOptions {
                 adminWA++;
             }
 
+
             str = namesRead.readLine();
         } while (str != null);
 
+        if (!reWrite) {
+            reWrite = !(adminWA + namesAccum > 0);
+        }
+
         if (reWrite) {
-            return writeNames();
+            boolean write = writeOptions();
+
+            if (write) {
+                return true;
+            } else {
+                throw new OptionsFailedException("Names Failed to read or write correctly.");
+            }
         }
 
         return true;
     }
 
-    private static boolean writeOptions() throws IOException {
-        PrintWriter optWrt = new PrintWriter(new FileWriter(optsFile), true);
+    protected static boolean writeOptions() throws IOException {
+        try (PrintWriter optWrt = new PrintWriter(new FileWriter(optsFile), true)) {
+            if (optWrt == null) {
+                return false;
+            }
 
-        if (optWrt == null) {
-            return false;
+            optWrt.println(serialVersionUID);
+            optWrt.println();
+            optWrt.println("enabled=" + Boolean.toString(enabled));
+            optWrt.println("watchun=" + Boolean.toString(watchUN));
+            optWrt.println("adminmode=" + Boolean.toString(adminM));
+            optWrt.println("chatLog=" + Boolean.toString(chatLog));
+            optWrt.println("volume=" + Float.toString(volume * 100.0F));
+            optWrt.println();
+            optWrt.println();
         }
-
-        optWrt.println(serialVersionUID);
-        optWrt.println();
-        optWrt.println("enabled=" + Boolean.toString(enabled));
-        optWrt.println("watchun=" + Boolean.toString(watchUN));
-        optWrt.println("adminmode=" + Boolean.toString(adminM));
-        optWrt.println("chatLog=" + Boolean.toString(chatLog));
-        optWrt.println("volume=" + Float.toString(volume * 100.0F));
-        optWrt.println();
-        optWrt.println();
 
         return true;
     }
 
-    private static boolean writeNames() throws IOException {
-        PrintWriter namesWrt = new PrintWriter(new FileWriter(namesFile));
+    protected static boolean writeNames() throws IOException {
+        try (PrintWriter namesWrt = new PrintWriter(new FileWriter(namesFile))) {
+            if (namesWrt == null) {
+                return false;
+            }
 
-        if (namesWrt == null) {
-            return false;
-        }
-
-        namesWrt.println(serialVersionUID);
-        namesWrt.println();
-        namesWrt.println("nameslist:");
-        if (namesAndWords.isEmpty()) {
-            namesAndWords.put(Minecraft.getMinecraft().thePlayer.username, 1);
-
-            namesWrt.println(Minecraft.getMinecraft().thePlayer.username);
+            namesWrt.println(serialVersionUID);
             namesWrt.println();
-            namesWrt.println("adminwordlist:");
-        } else {
-            for (String str : namesAndWords.keySet()) {
-                if (namesAndWords.get(str) == 1) {
-                    namesWrt.println(str);
+            namesWrt.println("nameslist:");
+            if (namesAndWords.isEmpty()) {
+                namesAndWords.put(Minecraft.getMinecraft().thePlayer.username, 1);
+
+                namesWrt.println(Minecraft.getMinecraft().thePlayer.username);
+                namesWrt.println();
+                namesWrt.println("adminwordlist:");
+            } else {
+                for (String str : namesAndWords.keySet()) {
+                    if (namesAndWords.get(str) == 1) {
+                        namesWrt.println(str);
+                    }
+                }
+
+                namesWrt.println();
+                namesWrt.println("adminwordlist:");
+
+                for (String str : namesAndWords.keySet()) {
+                    if (namesAndWords.get(str) == 0) {
+                        namesWrt.println(str);
+                    }
                 }
             }
 
             namesWrt.println();
-            namesWrt.println("adminwordlist:");
-
-            for (String str : namesAndWords.keySet()) {
-                if (namesAndWords.get(str) == 0) {
-                    namesWrt.println(str);
-                }
-            }
+            namesWrt.println();
         }
-
-        namesWrt.println();
-        namesWrt.println();
 
         return true;
     }

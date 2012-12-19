@@ -26,7 +26,7 @@ public class CNThread extends Thread {
 
         do {
             String str = "note.";
-            float var = (float)Math.pow(2.0D, (double)(4.0D - 12) / 12.0D);
+            float var = (float)Math.pow(2.0D, (double)(CNOptions.volume - 12) / 12.0D);
             switch (CNWatch.notQueueCheck()) {
                 case NIL:
                     break;
@@ -44,12 +44,12 @@ public class CNThread extends Thread {
             }
 
             if (!str.equals("note.")) {
-                wC.playSound((double)eCP.chunkCoordX + 0.5D, (double)eCP.chunkCoordY + 0.5D,
-                        (double)eCP.chunkCoordZ + 0.5D, str, 3.0F, var);
+                wC.playSound((double)eCP.chunkCoordX + 2.0D, (double)eCP.chunkCoordY + 2.0D,
+                        (double)eCP.chunkCoordZ + 2.0D, str, 3.0F, var);
             }
 
             try {
-                this.sleep(0x2710L);
+                CNThread.sleep(5000L);
             } catch (java.lang.InterruptedException e) {
                 e.printStackTrace();
             }

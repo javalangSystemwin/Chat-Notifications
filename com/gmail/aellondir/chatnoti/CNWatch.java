@@ -15,12 +15,13 @@ public class CNWatch {
     private static ArrayList<NotificationTypes> notQueue = new ArrayList<>();
     private static String unBreak = "";
 
+    //never to be instantiated
     private CNWatch() {
     }
 
     protected static void chatWatch(String check) {
 
-        if (check == null && CNOptions.namesAndWords.isEmpty()) {
+        if (check == null || check.length() == 0 || CNOptions.getNamesAndWords().isEmpty()) {
             return;
         }
 
@@ -34,20 +35,20 @@ public class CNWatch {
 
         String[] checkArr = check.split(unBreak);
 
-        if (CNOptions.adminM && CNOptions.namesAndWords.containsValue(0)) {
+        if (CNOptions.adminM && CNOptions.getNamesAndWords().containsValue(0)) {
             if (checkArr.length != 2) {
                 for (String str : checkArr) {
                     if (str.contains(" ")) {
                         String[] strS = str.split(" ");
 
                         for (String strC : strS) {
-                            if (CNOptions.namesAndWords.get(strC) != null && CNOptions.namesAndWords.get(strC) == 0) {
+                            if (CNOptions.getNamesAndWords().get(strC) != null && CNOptions.getNamesAndWords().get(strC) == 0) {
                                 notQueue.add(NotificationTypes.ADMIN);
                                 return;
                             }
                         }
                     } else {
-                        if (CNOptions.namesAndWords.get(str) != null && CNOptions.namesAndWords.get(str) == 0) {
+                        if (CNOptions.getNamesAndWords().get(str) != null && CNOptions.getNamesAndWords().get(str) == 0) {
                             notQueue.add(NotificationTypes.ADMIN);
                             return;
                         }
@@ -59,8 +60,8 @@ public class CNWatch {
         if (CNOptions.watchUN && CNOptions.namesAccum > 1) {
             for (String str : checkArr[0].split(" ")) {
                 if (!Minecraft.getMinecraft().thePlayer.username.equals(str)
-                        && CNOptions.namesAndWords.get(str) != null
-                        && CNOptions.namesAndWords.get(str) == 1) {
+                        && CNOptions.getNamesAndWords().get(str) != null
+                        && CNOptions.getNamesAndWords().get(str) == 1) {
                     notQueue.add(NotificationTypes.W_UN);
                     return;
                 }
@@ -78,15 +79,15 @@ public class CNWatch {
 
             if (strArr != null && strArr.length > 1) {
                 for (String strC : strArr) {
-                    if (CNOptions.namesAndWords.get(strC) != null
-                            && CNOptions.namesAndWords.get(strC) == 1) {
+                    if (CNOptions.getNamesAndWords().get(strC) != null
+                            && CNOptions.getNamesAndWords().get(strC) == 1) {
                         notQueue.add(NotificationTypes.GENERAL);
                         return;
                     }
                 }
             } else {
-                if (CNOptions.namesAndWords.get(str) != null
-                        && CNOptions.namesAndWords.get(str) == 1) {
+                if (CNOptions.getNamesAndWords().get(str) != null
+                        && CNOptions.getNamesAndWords().get(str) == 1) {
                     notQueue.add(NotificationTypes.GENERAL);
                     return;
                 }
