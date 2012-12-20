@@ -11,9 +11,9 @@ import net.minecraft.client.Minecraft;
  * @version 0.01
  */
 public class CNChatLogger {
-    private PrintWriter logWrt;
-    private File logDir;
-    private File logFile = null;
+    private static PrintWriter logWrt;
+    private static File logDir;
+    private static File logFile = null;
 
     public CNChatLogger() {
 
@@ -60,7 +60,7 @@ public class CNChatLogger {
         logWrt.flush();
     }
 
-    protected void closeLog() {
+    protected static void closeLog() {
         logWrt.close();
     }
 }
