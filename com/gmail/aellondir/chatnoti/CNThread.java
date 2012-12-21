@@ -51,7 +51,7 @@ public class CNThread extends Thread {
 
             if (!str.equals("note.")) {
                 wC.playSound((double)eCP.chunkCoordX + 2.0D, (double)eCP.chunkCoordY + 2.0D,
-                        (double)eCP.chunkCoordZ + 2.0D, str, 3.0F, var);
+                        (double)eCP.chunkCoordZ + 2.0D, str, 3.0F, var, false);
             }
 
             try {
