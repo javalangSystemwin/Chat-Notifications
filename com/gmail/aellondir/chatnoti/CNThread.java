@@ -12,6 +12,12 @@ import net.minecraft.src.WorldClient;
  */
 public class CNThread extends Thread {
 
+    public CNThread(String name) {
+        super(name);
+    }
+
+    
+
     @Override
     public void run() {
         WorldClient wC = null;

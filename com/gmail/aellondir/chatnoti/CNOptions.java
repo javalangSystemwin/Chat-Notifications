@@ -46,7 +46,7 @@ public class CNOptions {
      *                  1 = Names.
      * @code {String} is the word to be used.
      */
-    private static HashMap<String, Integer> namesAndWords = new HashMap<>();
+    private static HashMap<String, Integer> namesAndWords = new HashMap<String, Integer>();
     protected static int adminWA = 0, namesAccum = 0;
     private static File optsFile = new File(Minecraft.getMinecraftDir().getAbsolutePath() + System.getProperty("file.seperator") + "CNOpts.txt"),
             namesFile = new File(Minecraft.getMinecraftDir().getAbsolutePath() + System.getProperty("file.seperator") + "CNNames.txt");
@@ -60,6 +60,7 @@ public class CNOptions {
      * 0 = Admin.
      * 1 = Names.
      * @code {String} is the word to be used.
+     *
      * @return the namesAndWords
      */
     protected static HashMap<String, Integer> getNamesAndWords() {
@@ -133,23 +134,17 @@ public class CNOptions {
         do {
             String[] strArr = str.split("=");
 
-            switch (strArr[0]) {
-                case "enabled":
-                    enabled = Boolean.parseBoolean(strArr[1]);
-                    break;
-                case "watchun":
-                    watchUN = Boolean.parseBoolean(strArr[1]);
-                case "adminmode":
-                    adminM = Boolean.parseBoolean(strArr[1]);
-                    break;
-                case "chatLog":
-                    chatLog = Boolean.parseBoolean(strArr[1]);
-                    break;
-                case "volume":
-                    volume = Float.parseFloat(strArr[1]) / 100.0F;
-                    break;
-                default:
-                    break;
+            if (strArr[0].equals("enabled")) {
+                enabled = Boolean.parseBoolean(strArr[1]);
+            } else if (strArr[0].equals("watchun")) {
+                watchUN = Boolean.parseBoolean(strArr[1]);
+            } else if (strArr[0].equals("adminmode")) {
+                adminM = Boolean.parseBoolean(strArr[1]);
+            } else if (strArr[0].equals("chatLog")) {
+                chatLog = Boolean.parseBoolean(strArr[1]);
+            } else if (strArr[0].equals("volume")) {
+                volume = Float.parseFloat(strArr[1]) / 100.0F;
+            } else {
             }
 
             str = optsRead.readLine();
@@ -187,18 +182,14 @@ public class CNOptions {
         do {
             boolean namesR = false, adminR = false;
 
-            switch (str) {
-                case "nameslist:":
-                    namesR = true;
-                    adminR = false;
-                    break;
-                case "adminList":
-                    namesR = false;
-                    adminR = true;
-                    break;
-                case "":
-                default:
-                    break;
+            if (str.equals("nameslist:")) {
+                namesR = true;
+                adminR = false;
+            } else if (str.equals("adminList")) {
+                namesR = false;
+                adminR = true;
+            } else if (str.equals("")) {
+            } else {
             }
 
             if (namesR && !(str.equals(""))) {
@@ -233,7 +224,9 @@ public class CNOptions {
     }
 
     protected static boolean writeOptions() throws IOException {
-        try (PrintWriter optWrt = new PrintWriter(new FileWriter(optsFile), true)) {
+        PrintWriter optWrt = new PrintWriter(new FileWriter(optsFile), true);
+
+        try {
             if (optWrt == null) {
                 return false;
             }
@@ -247,13 +240,18 @@ public class CNOptions {
             optWrt.println("volume=" + Float.toString(volume * 100.0F));
             optWrt.println();
             optWrt.println();
+        } catch (Exception e) {
+            optWrt.close();
+            e.printStackTrace();
         }
 
         return true;
     }
 
     protected static boolean writeNames() throws IOException {
-        try (PrintWriter namesWrt = new PrintWriter(new FileWriter(namesFile))) {
+        PrintWriter namesWrt = new PrintWriter(new FileWriter(namesFile));
+
+        try {
             if (namesWrt == null) {
                 return false;
             }
@@ -286,6 +284,9 @@ public class CNOptions {
 
             namesWrt.println();
             namesWrt.println();
+        } catch (Exception e) {
+            namesWrt.close();
+            e.printStackTrace();
         }
 
         return true;

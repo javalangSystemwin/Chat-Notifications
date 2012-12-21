@@ -54,7 +54,7 @@ public class CNMain {
         }
 
         if (CNOptions.enabled) {
-            cNThread = new CNThread();
+            cNThread = new CNThread("Bob");
         }
     }
 
@@ -80,76 +80,61 @@ public class CNMain {
         String[] strArr = comStr.substring(0).split(" ");
 
         if (strArr.length == 2) {
-            switch (strArr[0].toUpperCase()) {
-                case "CNTOGGLE":
-                    CNOptions.enabled = Boolean.parseBoolean(strArr[1]);
-                    commandEntered = true;
-                    optionsChanged = true;
-                    break;
-                case "CNWUN":
-                    CNOptions.watchUN = Boolean.parseBoolean(strArr[1]);
-                    commandEntered = true;
-                    optionsChanged = true;
-                    break;
-                case "CNADMIN":
-                    CNOptions.adminM = Boolean.parseBoolean(strArr[1]);
-                    commandEntered = true;
-                    optionsChanged = true;
-                    break;
-                case "CNCHATLOGGER":
-                    CNOptions.chatLog = Boolean.parseBoolean(strArr[1]);
-                    commandEntered = true;
-                    optionsChanged = true;
-                    chatLogOn = CNOptions.chatLog;
-                    break;
-                case "CNVOLUME":
-                    CNOptions.volume = Float.parseFloat(strArr[1]) / 100.0F;
-                    commandEntered = true;
-                    optionsChanged = true;
-                    break;
-                case "CNHELP":
-                    try {
-                        helpPrint(Integer.parseInt(strArr[1]));
-                     } catch (NumberFormatException e) {
-                        helpPrint(-1);
-                     }
-                    commandEntered = true;
-                    break;
-                case "CNADDNAME":
-                    namesChanged = addName(strArr[1]);
-                    commandEntered = true;
-                    break;
-                case "CNRMVNAME":
-                    namesChanged = rmvName(strArr[1]);
-                    commandEntered = true;
-                    break;
-                case "CNADDWRD":
-                    namesChanged = addWord(strArr[1]);
-                    commandEntered = true;
-                    break;
-                case "CNRMVWRD":
-                    namesChanged = rmvWord(strArr[1]);
-                    commandEntered = true;
-                    break;
-                default:
-                    return false;
+            if (strArr[0].equals("CNTOGGLE")) {
+                CNOptions.enabled = Boolean.parseBoolean(strArr[1]);
+                commandEntered = true;
+                optionsChanged = true;
+            } else if (strArr[0].equals("CNWUN")) {
+                CNOptions.watchUN = Boolean.parseBoolean(strArr[1]);
+                commandEntered = true;
+                optionsChanged = true;
+            } else if (strArr[0].equals("CNADMIN")) {
+                CNOptions.adminM = Boolean.parseBoolean(strArr[1]);
+                commandEntered = true;
+                optionsChanged = true;
+            } else if (strArr[0].equals("CNCHATLOGGER")) {
+                CNOptions.chatLog = Boolean.parseBoolean(strArr[1]);
+                commandEntered = true;
+                optionsChanged = true;
+                chatLogOn = CNOptions.chatLog;
+            } else if (strArr[0].equals("CNVOLUME")) {
+                CNOptions.volume = Float.parseFloat(strArr[1]) / 100.0F;
+                commandEntered = true;
+                optionsChanged = true;
+            } else if (strArr[0].equals("CNHELP")) {
+                try {
+                    helpPrint(Integer.parseInt(strArr[1]));
+                } catch (NumberFormatException e) {
+                    helpPrint(-1);
+                }
+                commandEntered = true;
+            } else if (strArr[0].equals("CNADDNAME")) {
+                namesChanged = addName(strArr[1]);
+                commandEntered = true;
+            } else if (strArr[0].equals("CNRMVNAME")) {
+                namesChanged = rmvName(strArr[1]);
+                commandEntered = true;
+            } else if (strArr[0].equals("CNADDWRD")) {
+                namesChanged = addWord(strArr[1]);
+                commandEntered = true;
+            } else if (strArr[0].equals("CNRMVWRD")) {
+                namesChanged = rmvWord(strArr[1]);
+                commandEntered = true;
+            } else {
+                return false;
             }
         } else if (strArr.length == 1) {
-            switch (strArr[1]) {
-                case "CNLISTNAMES":
-                    listNames();
-                    commandEntered = true;
-                    break;
-                case "CNLISTWORDS":
-                    listWords();
-                    commandEntered = true;
-                    break;
-                case "CNHELP":
-                    helpPrint(-1);
-                    commandEntered = true;
-                    break;
-                default:
-                    return true;
+            if (strArr[0].equals("CNLISTNAMES")) {
+                listNames();
+                commandEntered = true;
+            } else if (strArr[0].equals("CNLISTWORDS")) {
+                listWords();
+                commandEntered = true;
+            } else if (strArr[0].equals("CNHELP")) {
+                helpPrint(-1);
+                commandEntered = true;
+            } else {
+                return true;
             }
         }
 
@@ -190,7 +175,7 @@ public class CNMain {
         if (cNThread != null && !cNThread.isAlive()) {
             cNThread.start();
         } else if (cNThread == null) {
-            cNThread = new CNThread();
+            cNThread = new CNThread("Bob2");
 
             cNThread.start();
         }
@@ -272,7 +257,7 @@ public class CNMain {
 
     public static void seDoBheathaAbhaile() {
         if (Minecraft.getMinecraft().theWorld != null && Minecraft.getMinecraft().theWorld.isRemote && numTicks == 20 && !printed) {
-            for (String str: helpWelcomeArr[0]) {
+            for (String str : helpWelcomeArr[0]) {
                 Minecraft.getMinecraft().thePlayer.addChatMessage(str);
             }
         } else if (!printed) {

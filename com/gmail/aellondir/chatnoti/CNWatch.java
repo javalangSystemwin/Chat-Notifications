@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 public class CNWatch {
 
     private static boolean firstRun = true;
-    private static ArrayList<NotificationTypes> notQueue = new ArrayList<>();
+    private static ArrayList<NotificationTypes> notQueue = new ArrayList<NotificationTypes>();
     private static String unBreak = "";
 
     //never to be instantiated
