@@ -16,26 +16,21 @@ import net.minecraft.client.Minecraft;
  * @serial McMod JPGH.0001 Class 0
  * @version 0.01
  */
-public class CNOptions {
+public final class CNOptions {
+    private final static long serialVersionUID = 798909871L;
 
-    /**
-     *
-     */
-    protected final static long serialVersionUID = 798909871L;
     /**
      *
      */
     protected static boolean enabled = true,
             watchUN = false,
-            /**
-             *
-             */
             adminM = false,
             chatLog = false;
     /**
      *
      */
     protected static float volume = 1.00F;
+
     /**
      * Names and Words for Administrator mode now immediately capitalized and
      * put in a
@@ -47,75 +42,77 @@ public class CNOptions {
      * @code {String} is the word to be used.
      */
     private static HashMap<String, Integer> namesAndWords = new HashMap<String, Integer>();
-    protected static int adminWA = 0, namesAccum = 0;
-    private static File optsFile = new File(Minecraft.getMinecraftDir().getAbsolutePath() + System.getProperty("file.seperator") + "CNOpts.txt"),
-            namesFile = new File(Minecraft.getMinecraftDir().getAbsolutePath() + System.getProperty("file.seperator") + "CNNames.txt");
 
     /**
-     * Names and Words for Administrator mode now immediately capitalized and
-     * put in a
+     *
+     */
+    protected static int adminWA = 0,
+            /**
+             *
+             */
+            namesAccum = 0;
+    // used for the storage of options, names, and word files for later use in rewriting the files.
+    private static File optsFile, namesFile;
+
+    /**
+     * Constructor attempts to write the two necessary files into the Minecraft directory, there is no encryption used
+     * as
+     * it is intended that one should be able to set ones options outside of the game, as well as within.
+     */
+    public CNOptions() {
+        optsFile = new File(Minecraft.getMinecraftDir().getAbsolutePath() + System.getProperty("file.seperator") + "CNOpts.txt");
+
+        try {
+            if (!optsFile.exists()) {
+                optsFile.createNewFile();
+                this.writeOptions();
+            } else {
+                this.readOptions();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+        namesFile = new File(Minecraft.getMinecraftDir().getAbsolutePath() + System.getProperty("file.seperator") + "CNNames.txt");
+
+        try {
+            if (!namesFile.exists()) {
+                namesFile.createNewFile();
+                this.writeNames();
+            } else {
+                this.readNames();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    /**
+     * Names and Words for Administrator mode now put in a
      * HashMap for more ready retrieval.
+     *
+     * @code {String} is the word to be used.
      *
      * @code {Integer} defines how the word should be treated.
      * 0 = Admin.
      * 1 = Names.
-     * @code {String} is the word to be used.
      *
-     * @return the namesAndWords
+     * @return the namesAndWords Hashmap.
      */
     protected static HashMap<String, Integer> getNamesAndWords() {
         return namesAndWords;
     }
 
-    //private constructor as this class is not to be instantiated.
-    private CNOptions() {
-    }
-
-    /**
-     *
-     * @return
-     */
-    protected static int getOptions() throws OptionsFailedException {
-        boolean opts = false, names = false;
-
-        try {
-            opts = readOptions();
-        } catch (FileNotFoundException e) {
-            //trys to write the options file. if it fails prints the stack trace, because fuck you thats why.
-            try {
-                opts = writeOptions();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        try {
-            names = readNames();
-        } catch (FileNotFoundException e) {
-            try {
-                names = writeNames();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (opts && names) {
-            return 1;
-        } else if (opts) {
-            return 42;
-        } else if (names) {
-            return -42;
-        } else {
-            return -1;
-        }
-    }
-
-    private static boolean readOptions() throws FileNotFoundException, IOException, OptionsFailedException {
+    //Trys to read the options decides whether or not a rewrite is necessary.
+    // RETURN TYPE: the success of the operation, only returns true if no exceptions have been thrown, and its gotten to
+    // its final if statement or past.
+    private boolean readOptions() throws FileNotFoundException, IOException {
         BufferedReader optsRead = new BufferedReader(new FileReader(optsFile));
 
         if (optsRead == null) {
@@ -155,15 +152,16 @@ public class CNOptions {
 
             if (write) {
                 return true;
-            } else {
-                throw new OptionsFailedException("Options Failed to read or write correctly.");
             }
         }
 
         return true;
     }
 
-    private static boolean readNames() throws FileNotFoundException, IOException, OptionsFailedException {
+    //Trys to read the names decides whether or not a rewrite is necessary.
+    // RETURN TYPE: the success of the operation, only returns true if no exceptions have been thrown, and its gotten to
+    // its final if statement or past.
+    private boolean readNames() throws FileNotFoundException, IOException {
         BufferedReader namesRead = new BufferedReader(new FileReader(namesFile));
 
         if (namesRead == null) {
@@ -216,14 +214,22 @@ public class CNOptions {
             if (write) {
                 return true;
             } else {
-                throw new OptionsFailedException("Names Failed to read or write correctly.");
+                return false;
             }
         }
 
         return true;
     }
 
-    protected static boolean writeOptions() throws IOException {
+    /**
+     * Called when the options need writing/rewriting.
+     *
+     * @return returns the success of the operation true = Completed Successfully, false = failed, either due to
+     *         exception or otherwise.
+     *
+     * @throws IOException
+     */
+    protected boolean writeOptions() throws IOException {
         PrintWriter optWrt = new PrintWriter(new FileWriter(optsFile), true);
 
         try {
@@ -237,7 +243,7 @@ public class CNOptions {
             optWrt.println("watchun=" + Boolean.toString(watchUN));
             optWrt.println("adminmode=" + Boolean.toString(adminM));
             optWrt.println("chatLog=" + Boolean.toString(chatLog));
-            optWrt.println("volume=" + Float.toString(volume * 100.0F));
+            optWrt.println("volume=" + Integer.toString((int) (volume * 100.0F)));
             optWrt.println();
             optWrt.println();
         } catch (Exception e) {
@@ -245,10 +251,19 @@ public class CNOptions {
             e.printStackTrace();
         }
 
+        optWrt.close();
         return true;
     }
 
-    protected static boolean writeNames() throws IOException {
+    /**
+     * Called when the names/words need writing/rewriting.
+     *
+     * @return returns the success of the operation true = Completed Successfully, false = failed, either due to
+     *         exception or otherwise.
+     *
+     * @throws IOException
+     */
+    protected boolean writeNames() throws IOException {
         PrintWriter namesWrt = new PrintWriter(new FileWriter(namesFile));
 
         try {
@@ -289,6 +304,7 @@ public class CNOptions {
             e.printStackTrace();
         }
 
+        namesWrt.close();
         return true;
     }
 }

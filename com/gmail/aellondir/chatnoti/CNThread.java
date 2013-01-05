@@ -16,7 +16,7 @@ public class CNThread extends Thread {
         super(name);
     }
 
-    
+
 
     @Override
     public void run() {

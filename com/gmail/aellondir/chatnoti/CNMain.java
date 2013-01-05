@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 public class CNMain {
 
     private static final char sectionSym = (char) 0xa7;
+    private static CNOptions cNOpt;
     private static CNChatLogger cNLog;
     private static CNThread cNThread;
     private static boolean initSuc = false, printed = false;
@@ -40,14 +41,12 @@ public class CNMain {
             "/cnaddname [nametoadd] - adds a name to the list of names.",
             "/cnrmvname [nametoremove] - removes a name from the list of names.",
             "/cnaddwrd [wordtoadd] - adds a name to the list of words.",
-            "/cnrmvwrd [wordtoremove] - removes a word from the list of words."}};
+            "/cnrmvwrd [wordtoremove] - removes a word from the list of words."}
+    };
 
     public CNMain() {
-        try {
-            CNOptions.getOptions();
-        } catch (OptionsFailedException e) {
-            e.printStackTrace();
-        }
+
+        cNOpt = new CNOptions();
 
         if (CNOptions.chatLog) {
             cNLog = new CNChatLogger();
@@ -56,6 +55,8 @@ public class CNMain {
         if (CNOptions.enabled) {
             cNThread = new CNThread("Bob");
         }
+
+        initSuc = true;
     }
 
     public void watch(String msg) {
@@ -71,13 +72,13 @@ public class CNMain {
     }
 
     public static boolean handleCommand(String comStr) {
-        if (comStr == null || !isCommand(comStr) || initSuc) {
+        if (comStr == null && !isMyCommand(comStr) && initSuc) {
             return false;
         }
 
         boolean optionsChanged = false, namesChanged = false, chatLogOn = CNOptions.chatLog, commandEntered = false;
 
-        String[] strArr = comStr.substring(0).split(" ");
+        String[] strArr = comStr.substring(1).split(" ");
 
         if (strArr.length == 2) {
             if (strArr[0].equals("CNTOGGLE")) {
@@ -134,7 +135,7 @@ public class CNMain {
                 helpPrint(-1);
                 commandEntered = true;
             } else {
-                return true;
+                return false;
             }
         }
 
@@ -148,7 +149,7 @@ public class CNMain {
 
         if (optionsChanged) {
             try {
-                CNOptions.writeOptions();
+                cNOpt.writeOptions();
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -157,7 +158,7 @@ public class CNMain {
 
         if (namesChanged) {
             try {
-                CNOptions.writeNames();
+                cNOpt.writeNames();
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -167,8 +168,12 @@ public class CNMain {
         return commandEntered;
     }
 
-    private static boolean isCommand(String comStr) {
-        return comStr.charAt(0) == 0x2F ? true : false;
+    private static boolean isMyCommand(String comStr) {
+        if (comStr.length() >= 12) {
+            return comStr.substring(0, 3).equals("/cn");
+        } else {
+            return false;
+        }
     }
 
     private static void tRun() {
