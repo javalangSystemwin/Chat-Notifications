@@ -308,4 +308,8 @@ public class CNMain {
 
         cNLog.closeLog();
     }
+
+    public CNOptions getOptions() {
+        return cNOpt;
+    }
 }

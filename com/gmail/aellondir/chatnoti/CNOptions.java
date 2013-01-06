@@ -105,7 +105,7 @@ public final class CNOptions {
      *
      * @return the namesAndWords Hashmap.
      */
-    protected static HashMap<String, Integer> getNamesAndWords() {
+    protected HashMap<String, Integer> getNamesAndWords() {
         return namesAndWords;
     }
 
