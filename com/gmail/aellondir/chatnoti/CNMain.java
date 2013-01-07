@@ -197,37 +197,37 @@ public class CNMain {
     }
 
     private static boolean addName(String name) {
-        if (CNOptions.getNamesAndWords().containsKey(name)) {
+        if (cNOpt.getNamesAndWords().containsKey(name)) {
             return false;
         }
 
-        CNOptions.getNamesAndWords().put(name, 0);
+        cNOpt.getNamesAndWords().put(name, 0);
 
         return true;
     }
 
     private static boolean rmvName(String name) {
-        return CNOptions.getNamesAndWords().remove(name) != null ? true : false;
+        return cNOpt.getNamesAndWords().remove(name) != null ? true : false;
     }
 
     private static boolean addWord(String word) {
-        if (CNOptions.getNamesAndWords().containsKey(word)) {
+        if (cNOpt.getNamesAndWords().containsKey(word)) {
             return false;
         }
 
-        CNOptions.getNamesAndWords().put(word, 1);
+        cNOpt.getNamesAndWords().put(word, 1);
 
         return true;
     }
 
     private static boolean rmvWord(String word) {
-        return CNOptions.getNamesAndWords().remove(word) != null ? true : false;
+        return cNOpt.getNamesAndWords().remove(word) != null ? true : false;
     }
 
     private static boolean listNames() {
-        if (CNOptions.getNamesAndWords().containsValue(1)) {
-            for (String str : CNOptions.getNamesAndWords().keySet()) {
-                if (CNOptions.getNamesAndWords().get(str) == 1) {
+        if (cNOpt.getNamesAndWords().containsValue(1)) {
+            for (String str : cNOpt.getNamesAndWords().keySet()) {
+                if (cNOpt.getNamesAndWords().get(str) == 1) {
                     Minecraft.getMinecraft().thePlayer.addChatMessage(str);
                 }
 
@@ -243,9 +243,9 @@ public class CNMain {
     }
 
     private static boolean listWords() {
-        if (CNOptions.getNamesAndWords().containsValue(0)) {
-            for (String str : CNOptions.getNamesAndWords().keySet()) {
-                if (CNOptions.getNamesAndWords().get(str) == 0) {
+        if (cNOpt.getNamesAndWords().containsValue(0)) {
+            for (String str : cNOpt.getNamesAndWords().keySet()) {
+                if (cNOpt.getNamesAndWords().get(str) == 0) {
                     Minecraft.getMinecraft().thePlayer.addChatMessage(str);
                 }
 
