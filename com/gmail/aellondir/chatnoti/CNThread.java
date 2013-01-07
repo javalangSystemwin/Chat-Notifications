@@ -7,11 +7,16 @@ import net.minecraft.src.WorldClient;
 /**
  *
  * @author James Hull
- * @serial McMod JPGH.0001 class 3
+ * @serial McMod JPGH.0001 class 3 v1
  * @version 0.01
  */
 public class CNThread extends Thread {
 
+    /**
+     *Creates an instance of CNThread and names it something I hope hilarious.
+     *
+     * @param name the name for the thread that I hope is hilarious.
+     */
     public CNThread(String name) {
         super(name);
     }

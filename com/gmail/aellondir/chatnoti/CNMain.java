@@ -44,6 +44,9 @@ public class CNMain {
             "/cnrmvwrd [wordtoremove] - removes a word from the list of words."}
     };
 
+    /**
+     *
+     */
     public CNMain() {
 
         cNOpt = new CNOptions();
@@ -59,6 +62,10 @@ public class CNMain {
         initSuc = true;
     }
 
+    /**
+     *
+     * @param msg
+     */
     public void watch(String msg) {
         if (CNOptions.enabled) {
             CNMain.tRun();
@@ -71,6 +78,11 @@ public class CNMain {
         }
     }
 
+    /**
+     *
+     * @param comStr
+     * @return
+     */
     public static boolean handleCommand(String comStr) {
         if (comStr == null && !isMyCommand(comStr) && initSuc) {
             return false;
@@ -260,6 +272,9 @@ public class CNMain {
         return false;
     }
 
+    /**
+     *
+     */
     public static void seDoBheathaAbhaile() {
         if (Minecraft.getMinecraft().theWorld != null && Minecraft.getMinecraft().theWorld.isRemote && numTicks == 20 && !printed) {
             for (String str : helpWelcomeArr[0]) {
@@ -303,12 +318,19 @@ public class CNMain {
         return scrubbed;
     }
 
+    /**
+     *
+     */
     public void closeMinecraft() {
         CNOptions.enabled = false;
 
         cNLog.closeLog();
     }
 
+    /**
+     *
+     * @return
+     */
     public CNOptions getOptions() {
         return cNOpt;
     }

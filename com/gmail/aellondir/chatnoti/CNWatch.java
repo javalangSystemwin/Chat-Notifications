@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 /**
  *
  * @author James Hull
- * @serial McMod JPGH.0001 class 2
+ * @serial McMod JPGH.0001 class 2 v1
  * @version 0.01
  */
 public class CNWatch {
@@ -19,6 +19,14 @@ public class CNWatch {
     private CNWatch() {
     }
 
+    /**
+     *Watches chat for the occerence of any String one might be interested in.
+     * Strings are Tokenized first then run through the various methods of determining whether a notification is
+     * necessary.
+     *
+     * @param check the string to be looked over.
+     * @param cNM the running instance of CNMain, so as to get at the options, and from there the names stored within.
+     */
     protected static void chatWatch(String check, CNMain cNM) {
         if (check == null || check.length() <= 0 || cNM.getOptions().getNamesAndWords().isEmpty()) {
             return;
@@ -27,7 +35,7 @@ public class CNWatch {
         if (firstCheck && check.length() >= 25 && check.charAt(0) == 0x3c) {
             unBreak = ">";
             firstCheck = false;
-        } else if (firstCheck && check.length() >= 0 && !(check.charAt(0) == 0x3c)) {
+        } else if (firstCheck && check.length() >= 25 && !(check.charAt(0) == 0x3c)) {
             unBreak = ":";
             firstCheck = false;
         } else if (firstCheck) {
@@ -86,6 +94,12 @@ public class CNWatch {
         return false;
     }
 
+    /**
+     *Checks that the notification queue is NOT empty, if true then removes and returns the first notification to be
+     * placed in the list, else returns NotificationTypes.NIL.
+     *
+     * @return the NotificationType.
+     */
     protected static NotificationTypes notQueueCheck() {
         return !notQueue.isEmpty() ? notQueue.remove(0) : NotificationTypes.NIL;
     }

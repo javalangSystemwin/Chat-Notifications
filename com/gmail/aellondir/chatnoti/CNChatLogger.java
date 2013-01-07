@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 /**
  *
  * @author James Hull
- * @serial McMod JPGH.0001 Class 4
+ * @serial McMod JPGH.0001 Class 4 v1
  * @version 0.01
  */
 public class CNChatLogger {
@@ -15,6 +15,13 @@ public class CNChatLogger {
     private static File logDir;
     private static File logFile = null;
 
+    /**
+     *Creates a new instance of the Chat Logger class, initializing the log files dir, and the log file itself.
+     * Then attempts to create a new PrintWriter for writing of the logFiles.
+     *
+     * Yes I know there are a lot of stack traces in my code this is due to the fact that I cannot anticipate what might
+     * go wrong so as to throw an exception, and I would rather have good info versus "This crashed my minecraft."
+     */
     public CNChatLogger() {
 
         logDir = new File(Minecraft.getMinecraftDir() + System.getProperty("file.separator") + "Chat Logs");
@@ -52,6 +59,11 @@ public class CNChatLogger {
         }
     }
 
+    /**
+     *Attempts to log ALL the chat.
+     *
+     * @param msg the chat to be logged.
+     */
     protected void logWrt(String msg) {
         if (msg == null) {
             return;
@@ -68,6 +80,9 @@ public class CNChatLogger {
         logWrt.flush();
     }
 
+    /**
+     *... Closes the log writer... nuff said no?
+     */
     protected static void closeLog() {
         logWrt.close();
     }

@@ -13,7 +13,7 @@ import net.minecraft.client.Minecraft;
 /**
  *
  * @author James Hull
- * @serial McMod JPGH.0001 Class 0
+ * @serial McMod JPGH.0001 Class 0 v2
  * @version 0.01
  */
 public final class CNOptions {
