@@ -11,12 +11,12 @@ import net.minecraft.client.Minecraft;
  */
 public class CNMain {
 
-    private static final char sectionSym = (char) 0xa7;
+    private static CNThread cNThread;
     private static CNOptions cNOpt;
     private static CNChatLogger cNLog;
-    private static CNThread cNThread;
     private static boolean initSuc = false, printed = false;
     private static int numTicks = 0;
+    private static final char sectionSym = (char) 0xa7;
     private final static String[][] helpWelcomeArr = {
         {"Chat Notifications 0.01 -- Initialized successfully",
             "Thank you for using my mod",
@@ -63,7 +63,7 @@ public class CNMain {
         if (CNOptions.enabled) {
             CNMain.tRun();
 
-            CNWatch.chatWatch(msg);
+            CNWatch.chatWatch(msg, this);
         }
 
         if (cNLog != null) {

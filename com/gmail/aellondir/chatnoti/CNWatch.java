@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
  */
 public class CNWatch {
 
-    private static boolean firstRun = true;
+    private static boolean firstCheck = true;
     private static ArrayList<NotificationTypes> notQueue = new ArrayList<NotificationTypes>();
     private static String unBreak = "";
 
@@ -20,26 +20,26 @@ public class CNWatch {
     }
 
     protected static void chatWatch(String check, CNMain cNM) {
-        if (check == null || check.length() == 0 || cNM.getOptions().getNamesAndWords().isEmpty()) {
+        if (check == null || check.length() <= 0 || cNM.getOptions().getNamesAndWords().isEmpty()) {
             return;
         }
 
-        if (firstRun && check.length() >= 0 && check.charAt(0) == 0x3c) {
+        if (firstCheck && check.length() >= 25 && check.charAt(0) == 0x3c) {
             unBreak = ">";
-            firstRun = false;
-        } else if (firstRun && check.length() >= 0 && !(check.charAt(0) == 0x3c)) {
+            firstCheck = false;
+        } else if (firstCheck && check.length() >= 0 && !(check.charAt(0) == 0x3c)) {
             unBreak = ":";
-            firstRun = false;
-        } else {
+            firstCheck = false;
+        } else if (firstCheck) {
             unBreak = ":";
-            firstRun = false;
+            firstCheck = false;
         }
 
         String[] checkArr = check.split(unBreak);
 
         if (CNOptions.enabled && CNOptions.adminM && adminCheck(checkArr, cNM)) {
             notQueue.add(NotificationTypes.ADMIN);
-        } else if (CNOptions.enabled && CNOptions.watchUN && watchUserNames(checkArr[1], cNM)) {
+        } else if (CNOptions.enabled && CNOptions.watchUN && watchUserNames(checkArr[0], cNM)) {
             notQueue.add(NotificationTypes.W_UN);
         } else if (CNOptions.enabled && watchNames(checkArr, cNM)) {
             notQueue.add(NotificationTypes.GENERAL);

@@ -34,6 +34,7 @@ public class CNChatLogger {
                 sB.append(logDir.getCanonicalPath()).append(System.getProperty("file.separator")).append("ChatLog(")
                         .append(fileNum).append(")").append(dayMonth).append(".txt");
             } catch (IOException e) {
+                e.printStackTrace();
             }
 
             logFile = new File(sB.toString());
@@ -47,12 +48,19 @@ public class CNChatLogger {
         try {
             logWrt = new PrintWriter(logFile);
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     protected void logWrt(String msg) {
-        if (logWrt == null  || msg == null) {
+        if (msg == null) {
             return;
+        } else if (logWrt == null) {
+            try {
+                logWrt = new PrintWriter(logFile);
+            } catch (IOException e) {
+
+            }
         }
 
         logWrt.println(msg);
