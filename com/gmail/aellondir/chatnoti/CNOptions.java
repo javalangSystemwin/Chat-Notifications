@@ -20,14 +20,23 @@ public final class CNOptions {
     private final static long serialVersionUID = 798909871L;
 
     /**
-     *
+     *Used to determine whether the mod is enabled.
      */
     protected static boolean enabled = true,
+            /**
+             *Used to determine if we are watching the portion of the chat before the UN Break.
+             */
             watchUN = false,
+            /**
+             *Used to determine if we are looking for Admin words.
+             */
             adminM = false,
+            /**
+             *You want chat logging?  Then this shit needs to be true.
+             */
             chatLog = false;
     /**
-     *
+     *The volume at which the sounds come out; I hope.
      */
     protected static float volume = 1.00F;
 
@@ -44,11 +53,11 @@ public final class CNOptions {
     private static HashMap<String, Integer> namesAndWords = new HashMap<String, Integer>();
 
     /**
-     *
+     * Used to determine if there are any words to look for.
      */
     protected static int adminWA = 0,
             /**
-             *
+             *Used to determine if there are any names to look for.
              */
             namesAccum = 0;
     // used for the storage of options, names, and word files for later use in rewriting the files.

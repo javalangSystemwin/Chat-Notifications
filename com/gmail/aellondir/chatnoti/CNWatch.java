@@ -45,11 +45,11 @@ public class CNWatch {
 
         String[] checkArr = check.split(unBreak);
 
-        if (CNOptions.enabled && CNOptions.adminM && adminCheck(checkArr, cNM)) {
+        if (CNOptions.enabled && CNOptions.adminM && CNOptions.adminWA != 0 && adminCheck(checkArr, cNM)) {
             notQueue.add(NotificationTypes.ADMIN);
-        } else if (CNOptions.enabled && CNOptions.watchUN && watchUserNames(checkArr[0], cNM)) {
+        } else if (CNOptions.enabled && CNOptions.watchUN && CNOptions.namesAccum != 0 && watchUserNames(checkArr[0], cNM)) {
             notQueue.add(NotificationTypes.W_UN);
-        } else if (CNOptions.enabled && watchNames(checkArr, cNM)) {
+        } else if (CNOptions.enabled && CNOptions.namesAccum != 0 && watchNames(checkArr, cNM)) {
             notQueue.add(NotificationTypes.GENERAL);
         }
     }
