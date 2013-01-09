@@ -63,8 +63,9 @@ public class CNMain {
     }
 
     /**
+     *Passes the message to various methods depending on necessity.
      *
-     * @param msg
+     * @param msg the message to be passed around like a five dollar hooker.
      */
     public void watch(String msg) {
         if (CNOptions.enabled) {
@@ -79,9 +80,11 @@ public class CNMain {
     }
 
     /**
+     *Handles commands specific to this mod, used to be a switch case and will hopefully be again once MCP gets its
+     * act together.
      *
-     * @param comStr
-     * @return
+     * @param comStr the String to be acted upon.is case insensitive.
+     * @return Returns false when is not a command and returns true else.
      */
     public static boolean handleCommand(String comStr) {
         if (comStr == null && !isMyCommand(comStr) && initSuc) {
@@ -181,7 +184,7 @@ public class CNMain {
     }
 
     private static boolean isMyCommand(String comStr) {
-        if (comStr.length() >= 12) {
+        if (comStr.length() >= 6) {
             return comStr.substring(0, 3).equals("/cn");
         } else {
             return false;
@@ -273,7 +276,9 @@ public class CNMain {
     }
 
     /**
+     *Prints a welcome message to the chat, currently not working...
      *
+     * "Se do bheatha abhaile" is gaelic for hail and welcome home.
      */
     public static void seDoBheathaAbhaile() {
         if (Minecraft.getMinecraft().theWorld != null && Minecraft.getMinecraft().theWorld.isRemote && numTicks == 20 && !printed) {
@@ -319,7 +324,7 @@ public class CNMain {
     }
 
     /**
-     *
+     *Hopefully closes stuff out when Minecraft closes out.
      */
     public void closeMinecraft() {
         CNOptions.enabled = false;
@@ -328,8 +333,9 @@ public class CNMain {
     }
 
     /**
+     *Return's the options instance held by this instance of CNMain.
      *
-     * @return
+     * @return CNOptions instance.
      */
     public CNOptions getOptions() {
         return cNOpt;
